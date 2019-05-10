@@ -1,4 +1,7 @@
 <?php
+require_once("../utils/logger.php");
+error_reporting(0);
+$filename = "DB.php";
 class DB {
     private $conn;
     public function __construct(){
@@ -15,8 +18,22 @@ class DB {
             $data = $statement->fetchAll();
             return $data;
         } catch(Exception $e){
-            throw new Exception("DB error");
+            _LOG($GLOBALS['filename'],$e->getMessage());
+            throw new Exception($e->getMessage());
         }
+    }
+    
+    public function query($query,$params = array()){
+        $res = false;
+        try{
+            $statement = $this->conn->prepare($query);
+            if($statement->execute($params))
+                $res = true;
+        } catch(Exception $e){
+            _LOG($GLOBALS['filename'],$e->getMessage());
+            throw new Exception($e->getMessage());
+        }
+        return $res;
     }
 }
 ?>

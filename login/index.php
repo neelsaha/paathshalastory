@@ -1,6 +1,7 @@
 <?php
 require_once("DbrLogin.php");
-
+error_reporting(0);
+session_start();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     #echo json_encode(($db->selectQuery("SELECT * from login")));
     $postbody = file_get_contents("php://input");

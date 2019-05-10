@@ -1,5 +1,8 @@
 <?php
 require_once("../utils/DB.php");
+require_once("../utils/logger.php");
+error_reporting(0);
+$filename = "DbrLogin.php";
 class DbrLogin
 {
     private $db;
@@ -8,7 +11,7 @@ class DbrLogin
             $this->db = new DB();
         } catch(Exception $e){
             #TO DO
-            echo "ERROR : ",$e->getMessage(),"\n";
+            _LOG($GLOBALS['filename'],$e->getMessage());
         }
     }
     
@@ -18,7 +21,7 @@ class DbrLogin
         try{
             $query = "SELECT username,role,last_login from login WHERE username=:username AND password=:enPassword";
             if(!$this->db){
-                throw new Exception("DB error"); 
+                throw new Exception("DB variable empty."); 
             }
             $data = $this->db->selectQuery($query,array(':username'=>$username,':enPassword'=>$enPassword));
             if ($data) {
@@ -29,7 +32,7 @@ class DbrLogin
             }
         } catch(Exception $e){
             #TO DO
-            echo "ERROR : ",$e->getMessage(),"\n";
+            _LOG($GLOBALS['filename'],$e->getMessage());
             $responseCode = 500;
         }
         return $responseCode;
@@ -48,6 +51,23 @@ class DbrLogin
         $_SESSION['secToken'] = $token;
         $_SESSION['userId'] = $data[0]['user_id'];
         $_SESSION['last_login'] = $lastLogin;
+        $this->updateLastLogin();
+        
+    }
+
+    private function updateLastLogin(){
+        try{
+            $query = "UPDATE login SET last_login = NOW() WHERE username =:username";
+            if(!$this->db){
+                throw new Exception("DB variable empty.");
+            }
+            if(!$this->db->query($query,array(':username'=>$_SESSION['username']))){
+                throw new Exception("Last login update failed.");
+            }
+        }catch(Exception $e){
+            _LOG($GLOBALS['filename'],$e->getMessage());
+        }
+
     }
 }
 
