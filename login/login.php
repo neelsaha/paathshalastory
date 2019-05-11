@@ -2,11 +2,10 @@
 require_once("DbrLogin.php");
 require_once("../utils/security.php");
 error_reporting(0);
-echo $_SERVER['REQUEST_METHOD'];
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    if(!__checkSecurity($_POST)){
-        $postbody = file_get_contents("php://input");
-        $postbody = json_decode($postbody,true);
+    $postbody = file_get_contents("php://input");
+    $postbody = json_decode($postbody,true);
+    if(!__checkSecurity($postbody['secToken'])){
         $aDbrLogin = new DbrLogin();
         $responseCode = $aDbrLogin->authenticate($postbody['username'],$postbody['password']);
         http_response_code($responseCode);
