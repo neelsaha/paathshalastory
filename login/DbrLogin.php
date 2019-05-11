@@ -26,7 +26,7 @@ class DbrLogin
             $data = $this->db->selectQuery($query,array(':username'=>$username,':enPassword'=>$enPassword));
             if ($data) {
                 $key = True;
-                $token = bin2hex(openssl_random_pseudo_bytes(64, $key));
+                $token = bin2hex(openssl_random_pseudo_bytes(16, $key));
                 $this->setSession($token,$username,$data[0]['role'],$data[0]['last_login']);
                 $responseCode = 200;
             }
@@ -51,6 +51,7 @@ class DbrLogin
         $_SESSION['secToken'] = $token;
         $_SESSION['userId'] = $data[0]['user_id'];
         $_SESSION['last_login'] = $lastLogin;
+        $_SESSION['session_id'] = session_id();
         $this->updateLastLogin();
         
     }
