@@ -1,0 +1,3 @@
+RewriteEngine on
+RewriteRule ^login/ login/login.php?url=$1 [NC,L,QSA]
+RewriteRule ^logout/ logout/logout.php [NC,L,QSA]
