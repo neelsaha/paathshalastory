@@ -1,1 +1,0 @@
-ERROR = 2019-05-10 11:21:22:000000 = noToken = test = SQLSTATE[HY000] [1044] Access denied for user ''@'localhost' to database 'paathshala'ERROR = 2019-05-10 11:21:22:000000 = noToken = test = DB variable empty.

@@ -1,7 +1,7 @@
 <?php
 require_once("../utils/DB.php");
 require_once("../utils/logger.php");
-error_reporting(0);
+error_reporting(1);
 $filename = "DbrLogin.php";
 class DbrLogin
 {
@@ -15,42 +15,42 @@ class DbrLogin
         }
     }
     
-    public function authenticate($username, $password){
-        $responseCode = 401;
-        $enPassword = $this->encrptPass($password);
+    public function authenticate($iUsername, $iPassword){
+        $aResponseCode = 401;
+        $aEnPassword = $this->encrptPass($iPassword);
         try{
-            $query = "SELECT username,role,last_login from login WHERE username=:username AND password=:enPassword";
+            $aQuery = "SELECT username,role,last_login from login WHERE username=:username AND password=:enPassword";
             if(!$this->db){
                 throw new Exception("DB variable empty."); 
             }
-            $data = $this->db->selectQuery($query,array(':username'=>$username,':enPassword'=>$enPassword));
-            if ($data) {
+            $aData = $this->db->selectQuery($aQuery,array(':username'=>$iUsername,':enPassword'=>$aEnPassword));
+            if ($aData) {
                 $key = True;
-                $token = bin2hex(openssl_random_pseudo_bytes(16, $key));
-                $this->setSession($token,$username,$data[0]['role'],$data[0]['last_login']);
-                $responseCode = 200;
+                $aToken = bin2hex(openssl_random_pseudo_bytes(16, $key));
+                $this->setSession($aToken,$iUsername,$aData[0]['role'],$aData[0]['last_login']);
+                $aResponseCode = 200;
             }
         } catch(Exception $e){
             #TO DO
             _LOG($GLOBALS['filename'],$e->getMessage());
-            $responseCode = 500;
+            $aResponseCode = 500;
         }
-        return $responseCode;
+        return $aResponseCode;
     }
 
-    private function encrptPass($password){
-        return hash('sha256', $password);
+    private function encrptPass($iPassword){
+        return hash('sha256', $iPassword);
     }
 
-    private function setSession($token,$username,$role,$lastLogin){
+    private function setSession($iToken,$iUsername,$iRole,$iLastLogin){
         #TO DO : for different roles
-        $query = "SELECT * FROM user where username=:username";
-        $data = $this->db->selectQuery($query,array(':username'=>$username));
-        $_SESSION['role'] = $role;
-        $_SESSION['username'] = $username;
-        $_SESSION['secToken'] = $token;
-        $_SESSION['userId'] = $data[0]['user_id'];
-        $_SESSION['last_login'] = $lastLogin;
+        $aQuery = "SELECT * FROM user where username=:username";
+        $aData = $this->db->selectQuery($aQuery,array(':username'=>$iUsername));
+        $_SESSION['role'] = $iRole;
+        $_SESSION['username'] = $iUsername;
+        $_SESSION['secToken'] = $iToken;
+        $_SESSION['userId'] = $aData[0]['user_id'];
+        $_SESSION['last_login'] = $iLastLogin;
         $_SESSION['session_id'] = session_id();
         $this->updateLastLogin();
         

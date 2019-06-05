@@ -13,8 +13,8 @@ function _LOG($filename,$str){
             $token = $_SESSION['secToken'];
         if(isset($_SESSION['username']))
             $username = $_SESSION['username'];
-        $logStr = "ERROR = ".date("Y-m-d h:i:s:u")." = ".$token." = ".$username." = ".$str;
-        fwrite($fp,  "\r" . $logStr);
+        $logStr = "ERROR = ".date("Y-m-d h:i:s:u")." = token: ".$token." = username: ".$username." = msg: ".$str." = filename: ".$filename;
+        fwrite($fp,  "\r\n" . $logStr);
         fclose($fp);
     }
 }
