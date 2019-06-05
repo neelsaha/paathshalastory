@@ -1,7 +1,7 @@
 <?php
 require_once("../utils/DB.php");
 require_once("../utils/logger.php");
-error_reporting(1);
+error_reporting(0);
 $filename = "DbrLogin.php";
 class DbrLogin
 {
