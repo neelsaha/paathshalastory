@@ -1,6 +1,8 @@
 <?php
-error_reporting(0);
-session_start();
-session_destroy();
-http_response_code(200);
+class Logout{
+    public static function signOut(){
+        session_destroy();
+        return 200;
+    }
+}
 ?>
